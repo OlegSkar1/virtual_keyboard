@@ -1,0 +1,28 @@
+html {
+  font-family: 'Tinos', sans-serif;
+  font-size: 16px;
+}
+
+.wrapper {
+  width: 700px;
+  margin: 0 auto;
+  padding: 0 auto;
+
+  .title {
+    text-align: center;
+    color: $main-color;
+    font-size: 2rem;
+  }
+
+  .body__textarea {
+    width: 100%;
+    height: 200px;
+    margin: 10px auto 10px;
+    padding: 10px;
+  }
+
+  .description,
+  .language {
+    text-align: center;
+  }
+}

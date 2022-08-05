@@ -1,5 +1,5 @@
-$body-color: rgb(77, 37, 37);
-
-body {
-  max-width: 1200px;
-}
+@import './reset';
+@import './variables';
+@import './font';
+@import './wrapper';
+@import './keyboard';

@@ -1,0 +1,10 @@
+.keyboard {
+  width: 700px;
+  padding: 5px;
+  border: 2px solid $keyboard-borderColor;
+  border-radius: 4px;
+
+  .hidden {
+    display: none;
+  }
+}
