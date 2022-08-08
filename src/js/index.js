@@ -1,4 +1,4 @@
 import '../scss/main.scss';
 import wrapper from './wrapper';
 
-wrapper();
+document.body.append(wrapper());

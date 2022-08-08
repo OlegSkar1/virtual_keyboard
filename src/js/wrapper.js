@@ -1,7 +1,15 @@
-const paragraph = () => {
+import keyboard from './keyboard';
+
+const wrapper = () => {
+  const div = document.createElement('div');
+  div.classList.add('wrapper');
+
   const title = document.createElement('p');
   title.classList.add('title');
   title.textContent = 'Виртуальная клавиатура';
+
+  const textarea = document.createElement('textarea');
+  textarea.classList.add('body__textarea');
 
   const description = document.createElement('p');
   description.classList.add('description');
@@ -10,12 +18,9 @@ const paragraph = () => {
   const language = document.createElement('p');
   language.classList.add('language');
   language.textContent = 'Для переключения языка комбинация: левыe shift + alt';
-  return [title, description, language];
-};
 
-const wrapper = () => {
-  const div = document.createElement('div');
-  div.classList.add('wrapper');
+  div.append(title, textarea, keyboard.init(), description, language);
+  return div;
 };
 
 export default wrapper;
