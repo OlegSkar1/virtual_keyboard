@@ -5,6 +5,7 @@
   border: 2px solid $keyboard-borderColor;
   border-radius: 4px;
   background: $keyboard-background;
+  user-select: none;
 
   .hidden {
     display: none;
@@ -28,13 +29,18 @@
       color: #fff;
       cursor: pointer;
 
-      &:hover,
-      &:active {
+      &:hover {
         background: $main-color;
         opacity: 0.65;
-        transform: scale(0.95);
         transition: all 0.1s;
       }
+    }
+
+    .active {
+      background: $main-color;
+      opacity: 0.65;
+      transform: scale(0.95);
+      transition: all 0.1s;
     }
 
     .semi-wide_key {

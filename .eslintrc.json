@@ -12,6 +12,7 @@
   "rules": {
     "no-unused-vars": "off",
     "no-console": "off",
+    "no-fallthrough": "off",
     "prettier/prettier": ["warn"]
   }
 }

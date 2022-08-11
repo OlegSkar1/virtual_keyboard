@@ -8,65 +8,65 @@ const keyboard = {
   main: null,
   keysContainer: null,
   keys: [
-    '`',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '0',
-    '-',
-    '=',
+    'Backquote',
+    'Digit1',
+    'Digit2',
+    'Digit3',
+    'Digit4',
+    'Digit5',
+    'Digit6',
+    'Digit7',
+    'Digit8',
+    'Digit9',
+    'Digit0',
+    'Minus',
+    'Equal',
     'Backspace',
     'Tab',
-    'q',
-    'w',
-    'e',
-    'r',
-    't',
-    'y',
-    'u',
-    'i',
-    'o',
-    'p',
-    '[',
-    ']',
-    '\\',
+    'KeyQ',
+    'KeyW',
+    'KeyE',
+    'KeyR',
+    'KeyT',
+    'KeyY',
+    'KeyU',
+    'KeyI',
+    'KeyO',
+    'KeyP',
+    'BracketLeft',
+    'BracketRight',
+    'Backslash',
     'CapsLock',
-    'a',
-    's',
-    'd',
-    'f',
-    'g',
-    'h',
-    'j',
-    'k',
-    'l',
-    ';',
-    "'",
+    'KeyA',
+    'KeyS',
+    'KeyD',
+    'KeyF',
+    'KeyG',
+    'KeyH',
+    'KeyJ',
+    'KeyK',
+    'KeyL',
+    'Semicolon',
+    'Quote',
     'Enter',
     'ShiftLeft',
-    'z',
-    'x',
-    'c',
-    'v',
-    'b',
-    'n',
-    'm',
-    ',',
-    '.',
-    '/',
+    'KeyZ',
+    'KeyX',
+    'KeyC',
+    'KeyV',
+    'KeyB',
+    'KeyN',
+    'KeyM',
+    'Comma',
+    'Period',
+    'Slash',
     'ShiftRight',
-    'Control',
-    'Meta',
-    'Alt',
-    ' ',
-    'Alt',
-    'Control',
+    'ControlLeft',
+    'MetaLeft',
+    'AltLeft',
+    'Space',
+    'AltRight',
+    'ControlRight',
     'ArrowLeft',
     'ArrowUp',
     'ArrowDown',
@@ -87,6 +87,7 @@ const keyboard = {
 
     this.main.append(this.keysContainer);
     this.createKeys();
+    this.triggerEvent();
 
     return this.main;
   },
@@ -96,24 +97,18 @@ const keyboard = {
       const keyElement = document.createElement('span');
       keyElement.classList.add('key');
       keyElement.id = key;
-      keyElement.textContent = key;
 
       const br = document.createElement('br');
 
       const wideKey =
-        [
-          'Backspace',
-          'CapsLock',
-          'ShiftRight',
-          'ShiftLeft',
-          'Enter',
-          'Tab',
-        ].indexOf(key) !== -1;
+        ['Backspace', 'CapsLock', 'ShiftLeft', 'Tab'].indexOf(key) !== -1;
 
-      const semiWideKey = ['Control', 'Alt'].indexOf(key) !== -1;
+      const semiWideKey =
+        ['ControlLeft', 'AltLeft', 'ControlRight', 'AltRight'].indexOf(key) !==
+        -1;
 
       const brKey =
-        ['Backspace', '\\', 'Enter', 'ShiftRight'].indexOf(key) !== -1;
+        ['Backspace', 'Backslash', 'Enter', 'ShiftRight'].indexOf(key) !== -1;
 
       if (wideKey) {
         keyElement.classList.add('wide_key');
@@ -123,45 +118,116 @@ const keyboard = {
         keyElement.classList.add('semi-wide_key');
       }
 
-      if (key === 'ShiftRight' || key === 'ShiftLeft') {
-        keyElement.textContent = 'Shift';
-      }
-      if (key === 'Control') {
-        keyElement.textContent = 'Ctrl';
-      }
-
-      if (key === ' ') {
-        keyElement.classList.add('extra-wide_key');
-      }
-
-      if (key === 'Enter') {
-        keyElement.style.width = '93px';
-      }
-
-      if (key === 'ShiftRight') {
-        keyElement.style.width = '142px';
-      }
-
-      if (key === 'ArrowDown') {
-        keyElement.innerHTML = `<img src="${arrowDown}">`;
-      }
-
-      if (key === 'ArrowUp') {
-        keyElement.innerHTML = `<img src="${arrowUp}">`;
-      }
-      if (key === 'ArrowLeft') {
-        keyElement.innerHTML = `<img src="${arrowLeft}">`;
-      }
-      if (key === 'ArrowRight') {
-        keyElement.innerHTML = `<img src="${arrowRight}">`;
-      }
-      if (key === 'Meta') {
-        keyElement.innerHTML = `<img src="${windows}">`;
+      switch (key) {
+        case 'ShiftRight':
+          keyElement.style.width = '142px';
+        case 'ShiftLeft':
+          keyElement.textContent = 'Shift';
+          break;
+        case 'ControlRight':
+        case 'ControlLeft':
+          keyElement.textContent = 'Ctrl';
+          break;
+        case 'AltRight':
+        case 'AltLeft':
+          keyElement.textContent = 'Alt';
+          break;
+        case 'Space':
+          keyElement.classList.add('extra-wide_key');
+          keyElement.textContent = '\u00A0';
+          break;
+        case 'Enter':
+          keyElement.style.width = '93px';
+          keyElement.textContent = 'Enter';
+          break;
+        case 'Backslash':
+          keyElement.textContent = '\\';
+          break;
+        case 'ArrowUp':
+          keyElement.innerHTML = `<img src="${arrowUp}">`;
+          break;
+        case 'ArrowDown':
+          keyElement.innerHTML = `<img src="${arrowDown}">`;
+          break;
+        case 'ArrowLeft':
+          keyElement.innerHTML = `<img src="${arrowLeft}">`;
+          break;
+        case 'ArrowRight':
+          keyElement.innerHTML = `<img src="${arrowRight}">`;
+          break;
+        case 'MetaLeft':
+          keyElement.innerHTML = `<img src="${windows}">`;
+          break;
+        case key.match(/Digit/) ? key : true:
+          keyElement.textContent = key.split(/Digit/).join('');
+          break;
+        case 'Backquote':
+          keyElement.textContent = '`';
+          break;
+        case 'Minus':
+          keyElement.textContent = '-';
+          break;
+        case 'Equal':
+          keyElement.textContent = '=';
+          break;
+        case 'BracketLeft':
+          keyElement.textContent = '[';
+          break;
+        case 'BracketRight':
+          keyElement.textContent = ']';
+          break;
+        case 'Semicolon':
+          keyElement.textContent = ';';
+          break;
+        case 'Quote':
+          keyElement.textContent = "'";
+          break;
+        case 'Comma':
+          keyElement.textContent = ',';
+          break;
+        case 'Period':
+          keyElement.textContent = ',';
+          break;
+        case 'Slash':
+          keyElement.textContent = '/';
+          break;
+        case key.match(/Key/) ? key : true:
+          keyElement.textContent = key.split(/Key/).join('').toLowerCase();
+          break;
+        default:
+          keyElement.textContent = key;
       }
 
       return brKey
         ? this.keysContainer.append(keyElement, br)
         : this.keysContainer.append(keyElement);
+    });
+  },
+
+  triggerEvent() {
+    document.addEventListener('keydown', (e) => {
+      this.keys.forEach((key) => {
+        if (e.code === key) {
+          const currKey = document.querySelector(`#${key}`);
+          currKey.classList.add('active');
+        }
+      });
+    });
+
+    document.addEventListener('keyup', (e) => {
+      this.keys.forEach((key) => {
+        if (e.code === key) {
+          const currKey = document.querySelector(`#${key}`);
+          currKey.classList.remove('active');
+        }
+      });
+    });
+
+    this.main.addEventListener('click', (e) => {
+      if (e.target.closest('.key')) {
+        e.target.classList.add('active');
+        setTimeout(() => e.target.classList.remove('active'), 200);
+      }
     });
   },
 };

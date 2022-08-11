@@ -10,6 +10,7 @@ const wrapper = () => {
 
   const textarea = document.createElement('textarea');
   textarea.classList.add('body__textarea');
+  textarea.id = 'textarea';
 
   const description = document.createElement('p');
   description.classList.add('description');
