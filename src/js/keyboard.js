@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import arrowDown from '../assets/img/chevron-down.png';
 import arrowUp from '../assets/img/chevron-up.png';
 import arrowLeft from '../assets/img/chevron-left.png';
@@ -72,10 +73,47 @@ const keyboard = {
     'ArrowDown',
     'ArrowRight',
   ],
+  ruKeys: [
+    ['Backquote', 'ё'],
+    ['KeyQ', 'й'],
+    ['KeyW', 'ц'],
+    ['KeyE', 'у'],
+    ['KeyR', 'к'],
+    ['KeyT', 'е'],
+    ['KeyY', 'н'],
+    ['KeyU', 'г'],
+    ['KeyI', 'ш'],
+    ['KeyO', 'щ'],
+    ['KeyP', 'з'],
+    ['BracketLeft', 'х'],
+    ['BracketRight', 'ъ'],
+    ['KeyA', 'ф'],
+    ['KeyS', 'ы'],
+    ['KeyD', 'в'],
+    ['KeyF', 'а'],
+    ['KeyG', 'п'],
+    ['KeyH', 'р'],
+    ['KeyJ', 'о'],
+    ['KeyK', 'л'],
+    ['KeyL', 'д'],
+    ['Semicolon', 'ж'],
+    ['Quote', 'э'],
+    ['KeyZ', 'я'],
+    ['KeyX', 'ч'],
+    ['KeyC', 'с'],
+    ['KeyV', 'м'],
+    ['KeyB', 'и'],
+    ['KeyN', 'т'],
+    ['KeyM', 'ь'],
+    ['Comma', 'б'],
+    ['Period', 'ю'],
+    ['Slash', '.'],
+  ],
 
   properties: {
     value: '',
     capsLock: false,
+    langRu: false,
   },
 
   init() {
@@ -88,6 +126,7 @@ const keyboard = {
     this.main.append(this.keysContainer);
     this.createKeys();
     this.triggerEvent();
+    this.changeLang(this.toggleLang.bind(keyboard), 'ControlLeft', 'AltLeft');
 
     return this.main;
   },
@@ -97,7 +136,6 @@ const keyboard = {
       const keyElement = document.createElement('span');
       keyElement.classList.add('key');
       keyElement.id = key;
-
       const br = document.createElement('br');
 
       const wideKey =
@@ -134,7 +172,6 @@ const keyboard = {
           break;
         case 'Space':
           keyElement.classList.add('extra-wide_key');
-          keyElement.textContent = '\u00A0';
           break;
         case 'Enter':
           keyElement.style.width = '93px';
@@ -204,11 +241,49 @@ const keyboard = {
     });
   },
 
+  toggleLang() {
+    if (!this.properties.langRu) {
+      this.properties.langRu = true;
+
+      this.keys.forEach((key) => {
+        for (let i = 0; i < this.ruKeys.length; i++) {
+          if (this.ruKeys[i][0] === key) {
+            const keyElement = document.querySelector(`#${key}`);
+            keyElement.textContent = this.ruKeys[i][1];
+          }
+        }
+      });
+    } else if (this.properties.langRu) {
+      this.properties.langRu = false;
+      this.keysContainer.innerHTML = '';
+      this.createKeys();
+    }
+  },
+
+  changeLang(func, ...keys) {
+    const pressed = new Set();
+    document.addEventListener('keydown', (e) => {
+      pressed.add(e.code);
+      for (const key of keys) {
+        if (!pressed.has(key)) {
+          return;
+        }
+      }
+      pressed.clear();
+      func();
+    });
+
+    document.addEventListener('keyup', (e) => {
+      pressed.delete(e.code);
+    });
+  },
+
   triggerEvent() {
     document.addEventListener('keydown', (e) => {
       this.keys.forEach((key) => {
         if (e.code === key) {
-          const currKey = document.querySelector(`#${key}`);
+          // e.preventDefault();
+          const currKey = document.querySelector(`#${e.code}`);
           currKey.classList.add('active');
         }
       });
@@ -225,8 +300,11 @@ const keyboard = {
 
     this.main.addEventListener('click', (e) => {
       if (e.target.closest('.key')) {
-        e.target.classList.add('active');
-        setTimeout(() => e.target.classList.remove('active'), 200);
+        e.target.closest('.key').classList.add('active');
+        setTimeout(
+          () => e.target.closest('.key').classList.remove('active'),
+          100
+        );
       }
     });
   },

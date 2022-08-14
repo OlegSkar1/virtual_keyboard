@@ -13,6 +13,23 @@
     "no-unused-vars": "off",
     "no-console": "off",
     "no-fallthrough": "off",
+    "no-plusplus": "off",
+    "prefer-destructuring": [
+      "error",
+      {
+        "VariableDeclarator": {
+          "array": false,
+          "object": true
+        },
+        "AssignmentExpression": {
+          "array": false,
+          "object": false
+        }
+      },
+      {
+        "enforceForRenamedProperties": false
+      }
+    ],
     "prettier/prettier": ["warn"]
   }
 }
