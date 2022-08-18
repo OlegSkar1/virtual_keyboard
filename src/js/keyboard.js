@@ -113,6 +113,7 @@ const keyboard = {
   properties: {
     value: '',
     capsLock: false,
+    shift: false,
     langRu: false,
   },
 
@@ -126,7 +127,7 @@ const keyboard = {
     this.main.append(this.keysContainer);
     this.createKeys();
     this.triggerEvent();
-    this.changeLang(this.toggleLang.bind(keyboard), 'ControlLeft', 'AltLeft');
+    this.isPressedKey(this.toggleLang.bind(keyboard), 'ControlLeft', 'AltLeft');
 
     return this.main;
   },
@@ -241,18 +242,22 @@ const keyboard = {
     });
   },
 
+  createRuKeys() {
+    keyboard.keys.forEach((key) => {
+      for (let i = 0; i < keyboard.ruKeys.length; i++) {
+        if (keyboard.ruKeys[i][0] === key) {
+          const keyElement = document.querySelector(`#${key}`);
+          keyElement.textContent = keyboard.ruKeys[i][1];
+        }
+      }
+    });
+  },
+
   toggleLang() {
     if (!this.properties.langRu) {
       this.properties.langRu = true;
 
-      this.keys.forEach((key) => {
-        for (let i = 0; i < this.ruKeys.length; i++) {
-          if (this.ruKeys[i][0] === key) {
-            const keyElement = document.querySelector(`#${key}`);
-            keyElement.textContent = this.ruKeys[i][1];
-          }
-        }
-      });
+      this.createRuKeys();
     } else if (this.properties.langRu) {
       this.properties.langRu = false;
       this.keysContainer.innerHTML = '';
@@ -260,7 +265,7 @@ const keyboard = {
     }
   },
 
-  changeLang(func, ...keys) {
+  isPressedKey(func, ...keys) {
     const pressed = new Set();
     document.addEventListener('keydown', (e) => {
       pressed.add(e.code);
@@ -278,7 +283,60 @@ const keyboard = {
     });
   },
 
+  shiftPressed(e) {
+    if (
+      !keyboard.properties.shift &&
+      (e.code === 'ShiftLeft' || e.code === 'ShiftRight') &&
+      !keyboard.properties.langRu
+    ) {
+      keyboard.properties.shift = true;
+      keyboard.keys.forEach((key) => {
+        if (key.match(/Key/)) {
+          const currKey = document.querySelector(`#${key}`);
+          currKey.textContent = key.split(/Key/).join('').toUpperCase();
+        }
+      });
+    } else if (
+      !keyboard.properties.shift &&
+      (e.code === 'ShiftLeft' || e.code === 'ShiftRight') &&
+      keyboard.properties.langRu
+    ) {
+      keyboard.properties.shift = true;
+      keyboard.keys.forEach((key) => {
+        for (let i = 0; i < keyboard.ruKeys.length; i++) {
+          if (keyboard.ruKeys[i][0] === key) {
+            const keyElement = document.querySelector(`#${key}`);
+            keyElement.textContent = keyboard.ruKeys[i][1].toUpperCase();
+          }
+        }
+      });
+    }
+  },
+
+  shiftUnpressed() {
+    if (keyboard.properties.shift && !keyboard.properties.langRu) {
+      keyboard.properties.shift = false;
+      keyboard.keys.forEach((key) => {
+        if (key.match(/Key/)) {
+          const currKey = document.querySelector(`#${key}`);
+          currKey.textContent = key.split(/Key/).join('').toLowerCase();
+        }
+      });
+    } else if (keyboard.properties.shift && keyboard.properties.langRu) {
+      keyboard.properties.shift = false;
+      keyboard.keys.forEach((key) => {
+        for (let i = 0; i < keyboard.ruKeys.length; i++) {
+          if (keyboard.ruKeys[i][0] === key) {
+            const keyElement = document.querySelector(`#${key}`);
+            keyElement.textContent = keyboard.ruKeys[i][1].toLowerCase();
+          }
+        }
+      });
+    }
+  },
+
   triggerEvent() {
+    document.addEventListener('keydown', this.shiftPressed);
     document.addEventListener('keydown', (e) => {
       this.keys.forEach((key) => {
         if (e.code === key) {
@@ -289,6 +347,7 @@ const keyboard = {
     });
 
     document.addEventListener('keyup', (e) => {
+      this.shiftUnpressed();
       this.keys.forEach((key) => {
         if (e.code === key) {
           const currKey = document.querySelector(`#${key}`);

@@ -59,6 +59,11 @@ const keyEvent = (e) => {
         keyboard.properties.value += '\n';
       }
       break;
+    case e.code.match(/(Tab|AltLeft|AltRight)/) ? e.code : true:
+      e.preventDefault();
+      break;
+    case e.code.match(/(ShiftLeft|ShiftRight)/) ? e.code : true:
+      break;
     case 'ArrowLeft':
       e.preventDefault();
       keyboard.properties.value += String.fromCharCode(8592);
