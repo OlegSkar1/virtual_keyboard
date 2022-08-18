@@ -30,16 +30,30 @@ const keyEvent = (e) => {
         const currShiftIndexEnKey = keyboard.shiftKeys.findIndex(
           (key) => key === e.code
         );
-        if (keyboard.properties.shift) {
+        const upperKeys = keyboard.keys[currIndexEnKey][1].toUpperCase();
+
+        if (!keyboard.properties.shift && keyboard.properties.capsLock) {
+          keyboard.properties.value += upperKeys;
+          textarea.value = keyboard.properties.value;
+        }
+        if (keyboard.properties.shift && !keyboard.properties.capsLock) {
           const currKey =
             currShiftIndexEnKey !== -1
               ? keyboard.shiftKeys[currShiftIndexEnKey + 1]
-              : keyboard.keys[currIndexEnKey][1].toUpperCase();
+              : upperKeys;
           keyboard.properties.value += currKey;
           textarea.value = keyboard.properties.value;
-        } else {
-          const currKey = keyboard.keys[currIndexEnKey][1];
+        }
+        if (keyboard.properties.shift && keyboard.properties.capsLock) {
+          const currKey =
+            currShiftIndexEnKey !== -1
+              ? keyboard.shiftKeys[currShiftIndexEnKey + 1]
+              : keyboard.keys[currIndexEnKey][1].toLowerCase();
           keyboard.properties.value += currKey;
+          textarea.value = keyboard.properties.value;
+        }
+        if (!keyboard.properties.shift && !keyboard.properties.capsLock) {
+          keyboard.properties.value += keyboard.keys[currIndexEnKey][1];
           textarea.value = keyboard.properties.value;
         }
       } else if (keyboard.properties.langRu) {
@@ -49,14 +63,31 @@ const keyEvent = (e) => {
         const currShiftIndexRuKey = keyboard.shiftRuKeys.findIndex(
           (key) => key === e.code
         );
-        if (keyboard.properties.shift) {
+        if (keyboard.properties.shift && !keyboard.properties.capsLock) {
           const currKey =
             currShiftIndexRuKey !== -1
               ? keyboard.shiftRuKeys[currShiftIndexRuKey + 1]
               : keyboard.ruKeys[currIndexRuKey][1].toUpperCase();
           keyboard.properties.value += currKey;
           textarea.value = keyboard.properties.value;
-        } else {
+        }
+        if (!keyboard.properties.shift && keyboard.properties.capsLock) {
+          const currKey =
+            currIndexRuKey !== -1
+              ? keyboard.ruKeys[currIndexRuKey][1].toUpperCase()
+              : e.key;
+          keyboard.properties.value += currKey;
+          textarea.value = keyboard.properties.value;
+        }
+        if (keyboard.properties.shift && keyboard.properties.capsLock) {
+          const currKey =
+            currShiftIndexRuKey !== -1
+              ? keyboard.shiftRuKeys[currShiftIndexRuKey + 1]
+              : keyboard.ruKeys[currIndexRuKey][1];
+          keyboard.properties.value += currKey;
+          textarea.value = keyboard.properties.value;
+        }
+        if (!keyboard.properties.shift && !keyboard.properties.capsLock) {
           const currKey =
             currIndexRuKey !== -1 ? keyboard.ruKeys[currIndexRuKey][1] : e.key;
           keyboard.properties.value += currKey;

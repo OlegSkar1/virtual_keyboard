@@ -385,7 +385,9 @@ const keyboard = {
           )
             ? key
             : true:
-            currentKey.textContent = currKey;
+            currentKey.textContent = keyboard.properties.capsLock
+              ? currKey.toLowerCase()
+              : currKey;
             break;
           default:
         }
@@ -416,8 +418,9 @@ const keyboard = {
           )
             ? key
             : true:
-            currentKey.textContent =
-              keyboard.ruKeys[currIndexRuKey][1].toUpperCase();
+            currentKey.textContent = keyboard.properties.capsLock
+              ? keyboard.ruKeys[currIndexRuKey][1].toLowerCase()
+              : keyboard.ruKeys[currIndexRuKey][1].toUpperCase();
             break;
           default:
         }
@@ -441,7 +444,9 @@ const keyboard = {
           )
             ? key
             : true:
-            currentKey.textContent = key[1].toLowerCase();
+            currentKey.textContent = keyboard.properties.capsLock
+              ? key[1].toUpperCase()
+              : key[1].toLowerCase();
             break;
           default:
         }
@@ -468,8 +473,9 @@ const keyboard = {
           )
             ? key
             : true:
-            currentKey.textContent =
-              keyboard.ruKeys[currIndexRuKey][1].toLowerCase();
+            currentKey.textContent = keyboard.properties.capsLock
+              ? keyboard.ruKeys[currIndexRuKey][1].toUpperCase()
+              : keyboard.ruKeys[currIndexRuKey][1].toLowerCase();
             break;
           default:
         }
@@ -477,11 +483,97 @@ const keyboard = {
     }
   },
 
+  capsLockEvent(e) {
+    const capsLock = document.querySelector(`#${e.code}`);
+    if (e.code === 'CapsLock' && !keyboard.properties.capsLock) {
+      keyboard.properties.capsLock = true;
+      capsLock.classList.add('active');
+
+      if (!keyboard.properties.langRu) {
+        keyboard.keys.forEach((key) => {
+          const currentKey = document.querySelector(`#${key[0]}`);
+
+          switch (key) {
+            case key[0].match(
+              /(Key|Digit|BracketLeft|BracketRight|Backslash|Backquote|Minus|Equal|Semicolon|Quote|Comma|Period|Slash)/
+            )
+              ? key
+              : true:
+              currentKey.textContent = key[1].toUpperCase();
+              break;
+            default:
+          }
+        });
+      } else if (keyboard.properties.langRu) {
+        keyboard.keys.forEach((key) => {
+          const currentKey = document.querySelector(`#${key[0]}`);
+
+          const currIndexRuKey = keyboard.ruKeys.findIndex(
+            (item) => item[0] === key[0]
+          );
+
+          switch (key) {
+            case key[0].match(
+              /(Backquote|Key|BracketLeft|BracketRight|Semicolon|Quote|Comma|Period)/
+            )
+              ? key
+              : true:
+              currentKey.textContent =
+                keyboard.ruKeys[currIndexRuKey][1].toUpperCase();
+              break;
+            default:
+          }
+        });
+      }
+    } else if (e.code === 'CapsLock' && keyboard.properties.capsLock) {
+      keyboard.properties.capsLock = false;
+      capsLock.classList.remove('active');
+
+      if (!keyboard.properties.langRu) {
+        keyboard.keys.forEach((key) => {
+          const currentKey = document.querySelector(`#${key[0]}`);
+
+          switch (key) {
+            case key[0].match(
+              /(Digit|Key|BracketLeft|BracketRight|Backslash|Backquote|Minus|Equal|Semicolon|Quote|Comma|Period|Slash)/
+            )
+              ? key
+              : true:
+              currentKey.textContent = key[1].toLowerCase();
+              break;
+            default:
+          }
+        });
+      } else if (keyboard.properties.langRu) {
+        keyboard.keys.forEach((key) => {
+          const currentKey = document.querySelector(`#${key[0]}`);
+
+          const currIndexRuKey = keyboard.ruKeys.findIndex(
+            (item) => item[0] === key[0]
+          );
+
+          switch (key) {
+            case key[0].match(
+              /(Backquote|Key|BracketLeft|BracketRight|Semicolon|Quote|Comma|Period|Slash)/
+            )
+              ? key
+              : true:
+              currentKey.textContent =
+                keyboard.ruKeys[currIndexRuKey][1].toLowerCase();
+              break;
+            default:
+          }
+        });
+      }
+    }
+  },
+
   triggerEvent() {
     document.addEventListener('keydown', (e) => {
+      this.capsLockEvent(e);
       this.shiftPressed(e);
       this.keys.forEach((key) => {
-        if (e.code === key[0]) {
+        if (e.code === key[0] && e.code !== 'CapsLock') {
           const currKey = document.querySelector(`#${e.code}`);
           currKey.classList.add('active');
         }
@@ -491,7 +583,7 @@ const keyboard = {
     document.addEventListener('keyup', (e) => {
       this.shiftUnpressed(e);
       this.keys.forEach((key) => {
-        if (e.code === key[0]) {
+        if (e.code === key[0] && e.code !== 'CapsLock') {
           const currKey = document.querySelector(`#${e.code}`);
           currKey.classList.remove('active');
         }
@@ -499,12 +591,43 @@ const keyboard = {
     });
 
     this.main.addEventListener('click', (e) => {
-      if (e.target.closest('.key')) {
+      if (
+        e.target.closest('.key') &&
+        e.target.id !== 'CapsLock' &&
+        e.target.id !== 'ShiftLeft'
+      ) {
         e.target.closest('.key').classList.add('active');
         setTimeout(
           () => e.target.closest('.key').classList.remove('active'),
           100
         );
+      } else if (e.target.id === 'CapsLock') {
+        e.target.closest('.key').classList.toggle('active');
+
+        const capsLockEvent = new KeyboardEvent('keydown', {
+          code: 'CapsLock',
+          bubbles: true,
+        });
+        this.main.dispatchEvent(capsLockEvent);
+      } else if (
+        e.target.id === 'ShiftLeft' &&
+        !e.target.classList.contains('active')
+      ) {
+        const shiftDownEvent = new KeyboardEvent('keydown', {
+          code: 'ShiftLeft',
+          shiftKey: true,
+          bubbles: true,
+        });
+        this.main.dispatchEvent(shiftDownEvent);
+      } else if (
+        e.target.id === 'ShiftLeft' &&
+        e.target.classList.contains('active')
+      ) {
+        const shiftUpEvent = new KeyboardEvent('keyup', {
+          code: 'ShiftLeft',
+          bubbles: true,
+        });
+        this.main.dispatchEvent(shiftUpEvent);
       }
     });
   },
