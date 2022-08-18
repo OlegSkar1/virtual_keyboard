@@ -65,7 +65,7 @@ const keyboard = {
     ['ControlLeft', 'Control'],
     ['MetaLeft', 'Meta'],
     ['AltLeft', 'Alt'],
-    ['Space', ' '],
+    ['Space', '\u00A0'],
     ['AltRight', 'Alt'],
     ['ControlRight', 'Control'],
     ['ArrowLeft', 'ArrowLeft'],
@@ -249,6 +249,7 @@ const keyboard = {
           break;
         case 'Space':
           keyElement.classList.add('extra-wide_key');
+          keyElement.textContent = '\u00A0';
           break;
         case 'Enter':
           keyElement.style.width = '93px';
