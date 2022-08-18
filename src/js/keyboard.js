@@ -381,14 +381,11 @@ const keyboard = {
 
         switch (key) {
           case key[0].match(
-            /(Digit|BracketLeft|BracketRight|Backslash|Backquote|Minus|Equal|Semicolon|Quote|Comma|Period|Slash)/
+            /(Key|Digit|BracketLeft|BracketRight|Backslash|Backquote|Minus|Equal|Semicolon|Quote|Comma|Period|Slash)/
           )
             ? key
             : true:
             currentKey.textContent = currKey;
-            break;
-          case key[0].match(/Key/) ? key : true:
-            currentKey.textContent = key[1].toUpperCase();
             break;
           default:
         }
@@ -408,11 +405,11 @@ const keyboard = {
         const currShiftIndexRuKey = keyboard.shiftRuKeys.findIndex(
           (item) => item === key[0]
         );
-        const currKey = keyboard.shiftRuKeys[currShiftIndexRuKey + 1];
 
         switch (key) {
           case key[0].match(/(Digit|Backslash|Minus|Equal|Slash)/) ? key : true:
-            currentKey.textContent = currKey;
+            currentKey.textContent =
+              keyboard.shiftRuKeys[currShiftIndexRuKey + 1];
             break;
           case key[0].match(
             /(Backquote|Key|BracketLeft|BracketRight|Semicolon|Quote|Comma|Period)/
@@ -431,8 +428,8 @@ const keyboard = {
   shiftUnpressed(e) {
     if (
       !keyboard.properties.langRu &&
-      !e.shiftKey &&
-      keyboard.properties.shift
+      keyboard.properties.shift &&
+      !e.shiftKey
     ) {
       keyboard.properties.shift = false;
       keyboard.keys.forEach((key) => {
@@ -451,24 +448,38 @@ const keyboard = {
       });
     } else if (
       keyboard.properties.langRu &&
-      !e.shiftKey &&
-      keyboard.properties.shift
+      keyboard.properties.shift &&
+      !e.shiftKey
     ) {
       keyboard.properties.shift = false;
       keyboard.keys.forEach((key) => {
-        for (let i = 0; i < keyboard.ruKeys.length; i++) {
-          if (keyboard.ruKeys[i][0] === key[0]) {
-            const keyElement = document.querySelector(`#${key[0]}`);
-            keyElement.textContent = keyboard.ruKeys[i][1].toLowerCase();
-          }
+        const currentKey = document.querySelector(`#${key[0]}`);
+
+        const currIndexRuKey = keyboard.ruKeys.findIndex(
+          (item) => item[0] === key[0]
+        );
+
+        switch (key) {
+          case key[0].match(/(Digit|Minus|Equal|Backslash)/) ? key : true:
+            currentKey.textContent = key[1];
+            break;
+          case key[0].match(
+            /(Backquote|Key|BracketLeft|BracketRight|Semicolon|Quote|Comma|Period|Slash)/
+          )
+            ? key
+            : true:
+            currentKey.textContent =
+              keyboard.ruKeys[currIndexRuKey][1].toLowerCase();
+            break;
+          default:
         }
       });
     }
   },
 
   triggerEvent() {
-    document.addEventListener('keydown', this.shiftPressed);
     document.addEventListener('keydown', (e) => {
+      this.shiftPressed(e);
       this.keys.forEach((key) => {
         if (e.code === key[0]) {
           const currKey = document.querySelector(`#${e.code}`);
