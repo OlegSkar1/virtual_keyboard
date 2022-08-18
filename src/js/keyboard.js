@@ -436,9 +436,17 @@ const keyboard = {
     ) {
       keyboard.properties.shift = false;
       keyboard.keys.forEach((key) => {
-        if (key[0].match(/Key/)) {
-          const currKey = document.querySelector(`#${key[0]}`);
-          currKey.textContent = key[0].split(/Key/).join('').toLowerCase();
+        const currentKey = document.querySelector(`#${key[0]}`);
+
+        switch (key) {
+          case key[0].match(
+            /(Digit|Key|BracketLeft|BracketRight|Backslash|Backquote|Minus|Equal|Semicolon|Quote|Comma|Period|Slash)/
+          )
+            ? key
+            : true:
+            currentKey.textContent = key[1].toLowerCase();
+            break;
+          default:
         }
       });
     } else if (
