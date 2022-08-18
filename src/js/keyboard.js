@@ -367,10 +367,30 @@ const keyboard = {
       !keyboard.properties.langRu
     ) {
       keyboard.properties.shift = true;
+
       keyboard.keys.forEach((key) => {
-        const currKey = document.querySelector(`#${key[0]}`);
-        if (key[0].match(/Key/)) {
-          currKey.textContent = key[0].split(/Key/).join('').toUpperCase();
+        const currentKey = document.querySelector(`#${key[0]}`);
+
+        const currShiftIndexEnKey = keyboard.shiftKeys.findIndex(
+          (item) => item === key[0]
+        );
+        const currKey =
+          currShiftIndexEnKey !== -1
+            ? keyboard.shiftKeys[currShiftIndexEnKey + 1]
+            : key[1].toUpperCase();
+
+        switch (key) {
+          case key[0].match(
+            /(Digit|BracketLeft|BracketRight|Backslash|Backquote|Minus|Equal|Semicolon|Quote|Comma|Period|Slash)/
+          )
+            ? key
+            : true:
+            currentKey.textContent = currKey;
+            break;
+          case key[0].match(/Key/) ? key : true:
+            currentKey.textContent = key[1].toUpperCase();
+            break;
+          default:
         }
       });
     } else if (
@@ -380,11 +400,29 @@ const keyboard = {
     ) {
       keyboard.properties.shift = true;
       keyboard.keys.forEach((key) => {
-        for (let i = 0; i < keyboard.ruKeys.length; i++) {
-          if (keyboard.ruKeys[i][0] === key[0]) {
-            const keyElement = document.querySelector(`#${key[0]}`);
-            keyElement.textContent = keyboard.ruKeys[i][1].toUpperCase();
-          }
+        const currentKey = document.querySelector(`#${key[0]}`);
+
+        const currIndexRuKey = keyboard.ruKeys.findIndex(
+          (item) => item[0] === key[0]
+        );
+        const currShiftIndexRuKey = keyboard.shiftRuKeys.findIndex(
+          (item) => item === key[0]
+        );
+        const currKey = keyboard.shiftRuKeys[currShiftIndexRuKey + 1];
+
+        switch (key) {
+          case key[0].match(/(Digit|Backslash|Minus|Equal|Slash)/) ? key : true:
+            currentKey.textContent = currKey;
+            break;
+          case key[0].match(
+            /(Backquote|Key|BracketLeft|BracketRight|Semicolon|Quote|Comma|Period)/
+          )
+            ? key
+            : true:
+            currentKey.textContent =
+              keyboard.ruKeys[currIndexRuKey][1].toUpperCase();
+            break;
+          default:
         }
       });
     }
