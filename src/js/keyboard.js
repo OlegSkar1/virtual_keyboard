@@ -282,7 +282,6 @@ const keyboard = {
     document.addEventListener('keydown', (e) => {
       this.keys.forEach((key) => {
         if (e.code === key) {
-          // e.preventDefault();
           const currKey = document.querySelector(`#${e.code}`);
           currKey.classList.add('active');
         }

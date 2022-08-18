@@ -7,19 +7,6 @@ document.body.append(wrapper());
 const textarea = document.querySelector('#textarea');
 
 const keyEvent = (e) => {
-  if (
-    keyboard.properties.langRu &&
-    e.code.match(
-      /(Digit|Key|Space|BracketLeft|BracketRight|Backslash|Backquote|Minus|Equal|Semicolon|Quote|Comma|Period|Slash)/
-    )
-  ) {
-    const currKey = keyboard.ruKeys.flat().findIndex((key) => key === e.code);
-    const value =
-      currKey !== -1
-        ? (keyboard.properties.value += keyboard.ruKeys.flat()[currKey + 1])
-        : (keyboard.properties.value += e.key);
-    textarea.value = value;
-  }
   switch (e.code) {
     case 'Backspace':
       if (e.target.tagName !== 'TEXTAREA') {
@@ -35,22 +22,34 @@ const keyEvent = (e) => {
     )
       ? e.code
       : true:
-      if (e.target.tagName !== 'TEXTAREA' && !keyboard.properties.langRu) {
-        keyboard.properties.value += e.key;
-        textarea.value = keyboard.properties.value;
+      if (e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        if (!keyboard.properties.langRu) {
+          keyboard.properties.value += e.key;
+          textarea.value = keyboard.properties.value;
+        } else {
+          const currIndexKey = keyboard.ruKeys
+            .flat()
+            .findIndex((key) => key === e.code);
+          const currKey = keyboard.ruKeys.flat()[currIndexKey + 1];
+          const value =
+            currIndexKey !== -1
+              ? (keyboard.properties.value += currKey)
+              : (keyboard.properties.value += e.key);
+          textarea.value = value;
+        }
       } else if (
         e.target.tagName === 'TEXTAREA' &&
-        !keyboard.properties.langRu
+        keyboard.properties.langRu
       ) {
-        keyboard.properties.value = textarea.value;
-        textarea.value = keyboard.properties.value;
-      } else if (keyboard.properties.langRu) {
-        const currKey = keyboard.ruKeys
+        e.preventDefault();
+        const currIndexKey = keyboard.ruKeys
           .flat()
           .findIndex((key) => key === e.code);
+        const currKey = keyboard.ruKeys.flat()[currIndexKey + 1];
         const value =
-          currKey !== -1
-            ? (keyboard.properties.value += keyboard.ruKeys.flat()[currKey + 1])
+          currIndexKey !== -1
+            ? (keyboard.properties.value += currKey)
             : (keyboard.properties.value += e.key);
         textarea.value = value;
       }
@@ -58,9 +57,7 @@ const keyEvent = (e) => {
     case 'Enter':
       if (e.target.tagName !== 'TEXTAREA') {
         keyboard.properties.value += '\n';
-      } else keyboard.properties.value = textarea.value;
-      textarea.value = keyboard.properties.value;
-
+      }
       break;
     case 'ArrowLeft':
       e.preventDefault();
@@ -87,9 +84,9 @@ const keyEvent = (e) => {
 };
 
 document.addEventListener('keydown', keyEvent);
-// textarea.oninput = () => {
-//   keyboard.properties.value = textarea.value;
-// };
+textarea.oninput = () => {
+  keyboard.properties.value = textarea.value;
+};
 
 document.addEventListener('click', (e) => {
   switch (e.target) {
