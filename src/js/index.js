@@ -22,12 +22,33 @@ const keyEvent = (e) => {
     )
       ? e.code
       : true:
+      e.preventDefault();
       if (e.target.tagName !== 'TEXTAREA') {
-        e.preventDefault();
         if (!keyboard.properties.langRu) {
           keyboard.properties.value += e.key;
           textarea.value = keyboard.properties.value;
-        } else {
+        } else if (keyboard.properties.langRu) {
+          const currIndexKey = keyboard.ruKeys
+            .flat()
+            .findIndex((key) => key === e.code);
+          const currKey = keyboard.ruKeys.flat()[currIndexKey + 1];
+
+          if (!keyboard.properties.shift) {
+            const value =
+              currIndexKey !== -1
+                ? (keyboard.properties.value += currKey)
+                : (keyboard.properties.value += e.key);
+            textarea.value = value;
+          } else if (keyboard.properties.shift) {
+            const UpperCaseValue =
+              currIndexKey !== -1
+                ? (keyboard.properties.value += currKey.toUpperCase())
+                : (keyboard.properties.value += e.key);
+            textarea.value = UpperCaseValue;
+          }
+        }
+      } else if (e.target.tagName === 'TEXTAREA') {
+        if (keyboard.properties.langRu) {
           const currIndexKey = keyboard.ruKeys
             .flat()
             .findIndex((key) => key === e.code);
@@ -37,21 +58,66 @@ const keyEvent = (e) => {
               ? (keyboard.properties.value += currKey)
               : (keyboard.properties.value += e.key);
           textarea.value = value;
+        } else {
+          keyboard.properties.value += e.key;
+          textarea.value = keyboard.properties.value;
         }
-      } else if (
-        e.target.tagName === 'TEXTAREA' &&
-        keyboard.properties.langRu
-      ) {
-        e.preventDefault();
-        const currIndexKey = keyboard.ruKeys
-          .flat()
-          .findIndex((key) => key === e.code);
-        const currKey = keyboard.ruKeys.flat()[currIndexKey + 1];
-        const value =
-          currIndexKey !== -1
-            ? (keyboard.properties.value += currKey)
-            : (keyboard.properties.value += e.key);
-        textarea.value = value;
+      }
+      break;
+    case e.code.match(
+      /(Digit|BracketLeft|BracketRight|Backslash|Backquote|Minus|Equal|Semicolon|Quote|Comma|Period|Slash)/
+    )
+      ? e.code
+      : true:
+      e.preventDefault();
+      if (e.target.tagName !== 'TEXTAREA' && e.shiftKey) {
+        if (!keyboard.properties.langRu) {
+          const currIndexKey = keyboard.shiftKeys.findIndex(
+            (key) => key === e.code
+          );
+          const currKey = keyboard.shiftKeys[currIndexKey + 1];
+          if (keyboard.properties.shift) {
+            const value =
+              currIndexKey !== -1
+                ? (keyboard.properties.value += currKey)
+                : (keyboard.properties.value += e.key.toUpperCase());
+            textarea.value = value;
+          }
+        } else if (keyboard.properties.langRu) {
+          const currIndexKey = keyboard.ruKeys
+            .flat()
+            .findIndex((key) => key === e.code);
+          const currKey = keyboard.ruKeys.flat()[currIndexKey + 1];
+
+          if (!keyboard.properties.shift) {
+            const value =
+              currIndexKey !== -1
+                ? (keyboard.properties.value += currKey)
+                : (keyboard.properties.value += e.key);
+            textarea.value = value;
+          } else if (keyboard.properties.shift) {
+            const UpperCaseValue =
+              currIndexKey !== -1
+                ? (keyboard.properties.value += currKey.toUpperCase())
+                : (keyboard.properties.value += e.key);
+            textarea.value = UpperCaseValue;
+          }
+        }
+      } else if (e.target.tagName === 'TEXTAREA') {
+        if (keyboard.properties.langRu) {
+          const currIndexKey = keyboard.ruKeys
+            .flat()
+            .findIndex((key) => key === e.code);
+          const currKey = keyboard.ruKeys.flat()[currIndexKey + 1];
+          const value =
+            currIndexKey !== -1
+              ? (keyboard.properties.value += currKey)
+              : (keyboard.properties.value += e.key);
+          textarea.value = value;
+        } else {
+          keyboard.properties.value += e.key;
+          textarea.value = keyboard.properties.value;
+        }
       }
       break;
     case 'Enter':

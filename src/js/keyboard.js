@@ -9,69 +9,69 @@ const keyboard = {
   main: null,
   keysContainer: null,
   keys: [
-    'Backquote',
-    'Digit1',
-    'Digit2',
-    'Digit3',
-    'Digit4',
-    'Digit5',
-    'Digit6',
-    'Digit7',
-    'Digit8',
-    'Digit9',
-    'Digit0',
-    'Minus',
-    'Equal',
-    'Backspace',
-    'Tab',
-    'KeyQ',
-    'KeyW',
-    'KeyE',
-    'KeyR',
-    'KeyT',
-    'KeyY',
-    'KeyU',
-    'KeyI',
-    'KeyO',
-    'KeyP',
-    'BracketLeft',
-    'BracketRight',
-    'Backslash',
-    'CapsLock',
-    'KeyA',
-    'KeyS',
-    'KeyD',
-    'KeyF',
-    'KeyG',
-    'KeyH',
-    'KeyJ',
-    'KeyK',
-    'KeyL',
-    'Semicolon',
-    'Quote',
-    'Enter',
-    'ShiftLeft',
-    'KeyZ',
-    'KeyX',
-    'KeyC',
-    'KeyV',
-    'KeyB',
-    'KeyN',
-    'KeyM',
-    'Comma',
-    'Period',
-    'Slash',
-    'ShiftRight',
-    'ControlLeft',
-    'MetaLeft',
-    'AltLeft',
-    'Space',
-    'AltRight',
-    'ControlRight',
-    'ArrowLeft',
-    'ArrowUp',
-    'ArrowDown',
-    'ArrowRight',
+    ['Backquote', '`'],
+    ['Digit1', '1'],
+    ['Digit2', '2'],
+    ['Digit3', '3'],
+    ['Digit4', '4'],
+    ['Digit5', '5'],
+    ['Digit6', '6'],
+    ['Digit7', '7'],
+    ['Digit8', '8'],
+    ['Digit9', '9'],
+    ['Digit0', '0'],
+    ['Minus', '-'],
+    ['Equal', '='],
+    ['Backspace', 'Backspace'],
+    ['Tab', 'Tab'],
+    ['KeyQ', 'q'],
+    ['KeyW', 'w'],
+    ['KeyE', 'e'],
+    ['KeyR', 'r'],
+    ['KeyT', 't'],
+    ['KeyY', 'y'],
+    ['KeyU', 'u'],
+    ['KeyI', 'i'],
+    ['KeyO', 'o'],
+    ['KeyP', 'p'],
+    ['BracketLeft', '['],
+    ['BracketRight', ']'],
+    ['Backslash', '\\'],
+    ['CapsLock', 'CapsLock'],
+    ['KeyA', 'a'],
+    ['KeyS', 's'],
+    ['KeyD', 'd'],
+    ['KeyF', 'f'],
+    ['KeyG', 'g'],
+    ['KeyH', 'h'],
+    ['KeyJ', 'j'],
+    ['KeyK', 'k'],
+    ['KeyL', 'l'],
+    ['Semicolon', ';'],
+    ['Quote', "'"],
+    ['Enter', 'Enter'],
+    ['ShiftLeft', 'Shift'],
+    ['KeyZ', 'z'],
+    ['KeyX', 'x'],
+    ['KeyC', 'c'],
+    ['KeyV', 'v'],
+    ['KeyB', 'b'],
+    ['KeyN', 'n'],
+    ['KeyM', 'm'],
+    ['Comma', ','],
+    ['Period', '.'],
+    ['Slash', '/'],
+    ['ShiftRight', 'Shift'],
+    ['ControlLeft', 'Control'],
+    ['MetaLeft', 'Meta'],
+    ['AltLeft', 'Alt'],
+    ['Space', ' '],
+    ['AltRight', 'Alt'],
+    ['ControlRight', 'Control'],
+    ['ArrowLeft', 'ArrowLeft'],
+    ['ArrowDown', 'ArrowDown'],
+    ['ArrowUp', 'ArrowUp'],
+    ['ArrowRight', 'ArrowRight'],
   ],
   ruKeys: [
     ['Backquote', 'ё'],
@@ -109,6 +109,80 @@ const keyboard = {
     ['Period', 'ю'],
     ['Slash', '.'],
   ],
+  shiftKeys: [
+    'Backquote',
+    '~',
+    'Digit1',
+    '!',
+    'Digit2',
+    '@',
+    'Digit3',
+    '#',
+    'Digit4',
+    '$',
+    'Digit5',
+    '%',
+    'Digit6',
+    '^',
+    'Digit7',
+    '&',
+    'Digit8',
+    '*',
+    'Digit9',
+    '(',
+    'Digit0',
+    ')',
+    'Minus',
+    '_',
+    'Equal',
+    '+',
+    'BracketLeft',
+    '{',
+    'BracketRight',
+    '}',
+    'Backslash',
+    '|',
+    'Semicolon',
+    ':',
+    'Quote',
+    '"',
+    'Comma',
+    '<',
+    'Period',
+    '>',
+    'Slash',
+    '?',
+  ],
+  shiftRuKeys: [
+    'Digit1',
+    '!',
+    'Digit2',
+    '"',
+    'Digit3',
+    '№',
+    'Digit4',
+    ';',
+    'Digit5',
+    '%',
+    'Digit6',
+    ':',
+    'Digit7',
+    '?',
+    'Digit8',
+    '*',
+    'Digit9',
+    '(',
+    'Digit0',
+    ')',
+    'Minus',
+    '_',
+    'Equal',
+    '+',
+    'Backslash',
+    '/',
+    'Slash',
+    ',',
+  ],
 
   properties: {
     value: '',
@@ -136,18 +210,20 @@ const keyboard = {
     this.keys.forEach((key) => {
       const keyElement = document.createElement('span');
       keyElement.classList.add('key');
-      keyElement.id = key;
+      keyElement.id = key[0];
       const br = document.createElement('br');
 
       const wideKey =
-        ['Backspace', 'CapsLock', 'ShiftLeft', 'Tab'].indexOf(key) !== -1;
+        ['Backspace', 'CapsLock', 'ShiftLeft', 'Tab'].indexOf(key[0]) !== -1;
 
       const semiWideKey =
-        ['ControlLeft', 'AltLeft', 'ControlRight', 'AltRight'].indexOf(key) !==
-        -1;
+        ['ControlLeft', 'AltLeft', 'ControlRight', 'AltRight'].indexOf(
+          key[0]
+        ) !== -1;
 
       const brKey =
-        ['Backspace', 'Backslash', 'Enter', 'ShiftRight'].indexOf(key) !== -1;
+        ['Backspace', 'Backslash', 'Enter', 'ShiftRight'].indexOf(key[0]) !==
+        -1;
 
       if (wideKey) {
         keyElement.classList.add('wide_key');
@@ -157,7 +233,7 @@ const keyboard = {
         keyElement.classList.add('semi-wide_key');
       }
 
-      switch (key) {
+      switch (key[0]) {
         case 'ShiftRight':
           keyElement.style.width = '142px';
         case 'ShiftLeft':
@@ -196,8 +272,8 @@ const keyboard = {
         case 'MetaLeft':
           keyElement.innerHTML = `<img src="${windows}">`;
           break;
-        case key.match(/Digit/) ? key : true:
-          keyElement.textContent = key.split(/Digit/).join('');
+        case key[0].match(/Digit/) ? key[0] : true:
+          keyElement.textContent = key[0].split(/Digit/).join('');
           break;
         case 'Backquote':
           keyElement.textContent = '`';
@@ -229,11 +305,11 @@ const keyboard = {
         case 'Slash':
           keyElement.textContent = '/';
           break;
-        case key.match(/Key/) ? key : true:
-          keyElement.textContent = key.split(/Key/).join('').toLowerCase();
+        case key[0].match(/Key/) ? key[0] : true:
+          keyElement.textContent = key[0].split(/Key/).join('').toLowerCase();
           break;
         default:
-          keyElement.textContent = key;
+          keyElement.textContent = key[0];
       }
 
       return brKey
@@ -245,8 +321,8 @@ const keyboard = {
   createRuKeys() {
     keyboard.keys.forEach((key) => {
       for (let i = 0; i < keyboard.ruKeys.length; i++) {
-        if (keyboard.ruKeys[i][0] === key) {
-          const keyElement = document.querySelector(`#${key}`);
+        if (keyboard.ruKeys[i][0] === key[0]) {
+          const keyElement = document.querySelector(`#${key[0]}`);
           keyElement.textContent = keyboard.ruKeys[i][1];
         }
       }
@@ -286,26 +362,26 @@ const keyboard = {
   shiftPressed(e) {
     if (
       !keyboard.properties.shift &&
-      (e.code === 'ShiftLeft' || e.code === 'ShiftRight') &&
+      e.shiftKey &&
       !keyboard.properties.langRu
     ) {
       keyboard.properties.shift = true;
       keyboard.keys.forEach((key) => {
-        if (key.match(/Key/)) {
-          const currKey = document.querySelector(`#${key}`);
-          currKey.textContent = key.split(/Key/).join('').toUpperCase();
+        const currKey = document.querySelector(`#${key[0]}`);
+        if (key[0].match(/Key/)) {
+          currKey.textContent = key[0].split(/Key/).join('').toUpperCase();
         }
       });
     } else if (
       !keyboard.properties.shift &&
-      (e.code === 'ShiftLeft' || e.code === 'ShiftRight') &&
+      e.shiftKey &&
       keyboard.properties.langRu
     ) {
       keyboard.properties.shift = true;
       keyboard.keys.forEach((key) => {
         for (let i = 0; i < keyboard.ruKeys.length; i++) {
-          if (keyboard.ruKeys[i][0] === key) {
-            const keyElement = document.querySelector(`#${key}`);
+          if (keyboard.ruKeys[i][0] === key[0]) {
+            const keyElement = document.querySelector(`#${key[0]}`);
             keyElement.textContent = keyboard.ruKeys[i][1].toUpperCase();
           }
         }
@@ -313,21 +389,29 @@ const keyboard = {
     }
   },
 
-  shiftUnpressed() {
-    if (keyboard.properties.shift && !keyboard.properties.langRu) {
+  shiftUnpressed(e) {
+    if (
+      !keyboard.properties.langRu &&
+      !e.shiftKey &&
+      keyboard.properties.shift
+    ) {
       keyboard.properties.shift = false;
       keyboard.keys.forEach((key) => {
-        if (key.match(/Key/)) {
-          const currKey = document.querySelector(`#${key}`);
-          currKey.textContent = key.split(/Key/).join('').toLowerCase();
+        if (key[0].match(/Key/)) {
+          const currKey = document.querySelector(`#${key[0]}`);
+          currKey.textContent = key[0].split(/Key/).join('').toLowerCase();
         }
       });
-    } else if (keyboard.properties.shift && keyboard.properties.langRu) {
+    } else if (
+      keyboard.properties.langRu &&
+      !e.shiftKey &&
+      keyboard.properties.shift
+    ) {
       keyboard.properties.shift = false;
       keyboard.keys.forEach((key) => {
         for (let i = 0; i < keyboard.ruKeys.length; i++) {
-          if (keyboard.ruKeys[i][0] === key) {
-            const keyElement = document.querySelector(`#${key}`);
+          if (keyboard.ruKeys[i][0] === key[0]) {
+            const keyElement = document.querySelector(`#${key[0]}`);
             keyElement.textContent = keyboard.ruKeys[i][1].toLowerCase();
           }
         }
@@ -347,7 +431,7 @@ const keyboard = {
     });
 
     document.addEventListener('keyup', (e) => {
-      this.shiftUnpressed();
+      this.shiftUnpressed(e);
       this.keys.forEach((key) => {
         if (e.code === key) {
           const currKey = document.querySelector(`#${key}`);
