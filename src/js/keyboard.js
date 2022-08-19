@@ -423,7 +423,7 @@ const keyboard = {
     document.addEventListener('keydown', this.shiftPressed);
     document.addEventListener('keydown', (e) => {
       this.keys.forEach((key) => {
-        if (e.code === key) {
+        if (e.code === key[0]) {
           const currKey = document.querySelector(`#${e.code}`);
           currKey.classList.add('active');
         }
@@ -433,8 +433,8 @@ const keyboard = {
     document.addEventListener('keyup', (e) => {
       this.shiftUnpressed(e);
       this.keys.forEach((key) => {
-        if (e.code === key) {
-          const currKey = document.querySelector(`#${key}`);
+        if (e.code === key[0]) {
+          const currKey = document.querySelector(`#${e.code}`);
           currKey.classList.remove('active');
         }
       });
