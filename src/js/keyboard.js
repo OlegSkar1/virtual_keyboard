@@ -38,7 +38,7 @@ const keyboard = {
     ['BracketRight', ']'],
     ['Backslash', '\\'],
     ['Delete', 'Delete'],
-    [('CapsLock', 'CapsLock')],
+    ['CapsLock', 'CapsLock'],
     ['KeyA', 'a'],
     ['KeyS', 's'],
     ['KeyD', 'd'],
@@ -657,6 +657,14 @@ const keyboard = {
           cancelable: true,
         });
         this.main.dispatchEvent(backSpaceDownEvent);
+      }
+      if (e.target.id === 'Tab') {
+        const tabDownEvent = new KeyboardEvent('keydown', {
+          code: 'Tab',
+          bubbles: true,
+          cancelable: true,
+        });
+        this.main.dispatchEvent(tabDownEvent);
       }
     });
   },

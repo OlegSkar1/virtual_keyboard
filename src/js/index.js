@@ -128,6 +128,19 @@ const keyEvent = (e) => {
       break;
     case e.code.match(/(Tab|AltLeft|AltRight)/) ? e.code : true:
       e.preventDefault();
+      if (e.code === 'Tab') {
+        if (selectStart === selectEnd) {
+          textarea.setRangeText('\u00A0\u00A0', selectStart, selectEnd, 'end');
+        } else if (selectStart !== selectEnd) {
+          textarea.setRangeText(
+            '\u00A0\u00A0',
+            textarea.selectionStart,
+            textarea.selectionEnd,
+            'end'
+          );
+        }
+        keyboard.properties.value = textarea.value;
+      }
       break;
     case e.code.match(/(ShiftLeft|ShiftRight)/) ? e.code : true:
       break;
