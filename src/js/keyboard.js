@@ -594,7 +594,8 @@ const keyboard = {
       if (
         e.target.closest('.key') &&
         e.target.id !== 'CapsLock' &&
-        e.target.id !== 'ShiftLeft'
+        e.target.id !== 'ShiftLeft' &&
+        e.target.id !== 'ShiftRight'
       ) {
         e.target.closest('.key').classList.add('active');
         setTimeout(
@@ -613,21 +614,48 @@ const keyboard = {
         e.target.id === 'ShiftLeft' &&
         !e.target.classList.contains('active')
       ) {
-        const shiftDownEvent = new KeyboardEvent('keydown', {
+        const shiftLeftDownEvent = new KeyboardEvent('keydown', {
           code: 'ShiftLeft',
           shiftKey: true,
           bubbles: true,
         });
-        this.main.dispatchEvent(shiftDownEvent);
+        this.main.dispatchEvent(shiftLeftDownEvent);
       } else if (
         e.target.id === 'ShiftLeft' &&
         e.target.classList.contains('active')
       ) {
-        const shiftUpEvent = new KeyboardEvent('keyup', {
+        const shiftLeftUpEvent = new KeyboardEvent('keyup', {
           code: 'ShiftLeft',
           bubbles: true,
         });
-        this.main.dispatchEvent(shiftUpEvent);
+        this.main.dispatchEvent(shiftLeftUpEvent);
+      } else if (
+        e.target.id === 'ShiftRight' &&
+        !e.target.classList.contains('active')
+      ) {
+        const shiftRightDownEvent = new KeyboardEvent('keydown', {
+          code: 'ShiftRight',
+          shiftKey: true,
+          bubbles: true,
+        });
+        this.main.dispatchEvent(shiftRightDownEvent);
+      } else if (
+        e.target.id === 'ShiftRight' &&
+        e.target.classList.contains('active')
+      ) {
+        const shiftRightUpEvent = new KeyboardEvent('keyup', {
+          code: 'ShiftRight',
+          bubbles: true,
+        });
+        this.main.dispatchEvent(shiftRightUpEvent);
+      }
+      if (e.target.id === 'Backspace') {
+        const backSpaceDownEvent = new KeyboardEvent('keydown', {
+          code: 'Backspace',
+          bubbles: true,
+          cancelable: true,
+        });
+        this.main.dispatchEvent(backSpaceDownEvent);
       }
     });
   },

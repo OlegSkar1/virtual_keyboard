@@ -6,16 +6,44 @@ document.body.append(wrapper());
 
 const textarea = document.querySelector('#textarea');
 
+const keyFocus = (e) => {
+  if (
+    e.target.closest('.keys_container') ||
+    e.target.closest('.body__textarea')
+  ) {
+    textarea.focus();
+  } else if (e.key) {
+    textarea.focus();
+  } else {
+    textarea.blur();
+  }
+};
+
 const keyEvent = (e) => {
+  const selectStart = textarea.selectionStart;
+  const selectEnd = textarea.selectionEnd;
+
+  keyFocus(e);
   switch (e.code) {
     case 'Backspace':
-      if (e.target.tagName !== 'TEXTAREA') {
-        keyboard.properties.value = keyboard.properties.value.slice(
-          0,
-          keyboard.properties.value.length - 1
+      e.preventDefault();
+
+      if (
+        selectStart === selectEnd &&
+        textarea.value !== '' &&
+        selectStart > 0
+      ) {
+        textarea.setRangeText('', selectStart - 1, selectStart, 'end');
+      } else if (selectStart !== selectEnd) {
+        textarea.setRangeText(
+          '',
+          textarea.selectionStart,
+          textarea.selectionEnd,
+          'end'
         );
-        textarea.value = keyboard.properties.value;
-      } else keyboard.properties.value = textarea.value;
+      }
+
+      keyboard.properties.value = textarea.value;
       break;
     case e.code.match(
       /(Digit|Key|Space|BracketLeft|BracketRight|Backslash|Backquote|Minus|Equal|Semicolon|Quote|Comma|Period|Slash)/
@@ -134,21 +162,8 @@ textarea.oninput = () => {
   keyboard.properties.value = textarea.value;
 };
 
-const keyFocus = () => {
-  document.addEventListener('click', (e) => {
-    if (
-      e.target.closest('.keys_container') ||
-      e.target.closest('.body__textarea')
-    ) {
-      textarea.focus();
-      console.log(e.target);
-    } else textarea.blur();
-    textarea.removeEventListener('focus', keyFocus);
-  });
-};
-textarea.addEventListener('focus', keyFocus);
-
 document.addEventListener('click', (e) => {
+  keyFocus(e);
   switch (e.target) {
     case e.target.id.match(
       /(Digit|Key|Space|BracketLeft|BracketRight|Backslash|Backquote|Minus|Equal|Semicolon|Quote|Comma|Period|Slash)/
@@ -156,12 +171,6 @@ document.addEventListener('click', (e) => {
       ? e.target
       : true:
       keyboard.properties.value += e.target.innerText;
-      break;
-    case e.target.id === 'Backspace' ? e.target : true:
-      keyboard.properties.value = keyboard.properties.value.slice(
-        0,
-        keyboard.properties.value.length - 1
-      );
       break;
     case e.target.id === 'Enter' ? e.target : true:
       keyboard.properties.value += '\n';
