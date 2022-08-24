@@ -134,6 +134,20 @@ textarea.oninput = () => {
   keyboard.properties.value = textarea.value;
 };
 
+const keyFocus = () => {
+  document.addEventListener('click', (e) => {
+    if (
+      e.target.closest('.keys_container') ||
+      e.target.closest('.body__textarea')
+    ) {
+      textarea.focus();
+      console.log(e.target);
+    } else textarea.blur();
+    textarea.removeEventListener('focus', keyFocus);
+  });
+};
+textarea.addEventListener('focus', keyFocus);
+
 document.addEventListener('click', (e) => {
   switch (e.target) {
     case e.target.id.match(
