@@ -27,7 +27,6 @@ const keyEvent = (e) => {
   switch (e.code) {
     case 'Backspace':
       e.preventDefault();
-
       if (
         selectStart === selectEnd &&
         textarea.value !== '' &&
@@ -42,7 +41,6 @@ const keyEvent = (e) => {
           'end'
         );
       }
-
       keyboard.properties.value = textarea.value;
       break;
     case e.code.match(
@@ -171,6 +169,23 @@ document.addEventListener('click', (e) => {
       ? e.target
       : true:
       keyboard.properties.value += e.target.innerText;
+      break;
+    case e.target.id === 'Delete' ? e.target : true:
+      {
+        const selectStart = textarea.selectionStart;
+        const selectEnd = textarea.selectionEnd;
+        if (selectStart === selectEnd && textarea.value !== '') {
+          textarea.setRangeText('', selectStart, selectStart + 1, 'end');
+        } else if (selectStart !== selectEnd) {
+          textarea.setRangeText(
+            '',
+            textarea.selectionStart,
+            textarea.selectionEnd,
+            'end'
+          );
+        }
+        keyboard.properties.value = textarea.value;
+      }
       break;
     case e.target.id === 'Enter' ? e.target : true:
       keyboard.properties.value += '\n';
