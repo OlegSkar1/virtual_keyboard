@@ -30,6 +30,13 @@
         "enforceForRenamedProperties": false
       }
     ],
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowShortCircuit": true,
+        "allowTernary": true
+      }
+    ],
     "prettier/prettier": ["warn"]
   }
 }

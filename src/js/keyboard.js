@@ -236,6 +236,12 @@ const keyboard = {
       }
 
       switch (key[0]) {
+        case 'CapsLock':
+          if (this.properties.capsLock) {
+            keyElement.classList.add('active');
+          }
+          keyElement.textContent = 'CapsLock';
+          break;
         case 'ShiftRight':
           keyElement.style.width = '142px';
         case 'ShiftLeft':
@@ -309,7 +315,15 @@ const keyboard = {
           keyElement.textContent = '/';
           break;
         case key[0].match(/Key/) ? key[0] : true:
-          keyElement.textContent = key[0].split(/Key/).join('').toLowerCase();
+          this.properties.capsLock
+            ? (keyElement.textContent = key[0]
+                .split(/Key/)
+                .join('')
+                .toUpperCase())
+            : (keyElement.textContent = key[0]
+                .split(/Key/)
+                .join('')
+                .toLowerCase());
           break;
         default:
           keyElement.textContent = key[0];
@@ -324,9 +338,14 @@ const keyboard = {
   createRuKeys() {
     keyboard.keys.forEach((key) => {
       for (let i = 0; i < keyboard.ruKeys.length; i++) {
-        if (keyboard.ruKeys[i][0] === key[0]) {
-          const keyElement = document.querySelector(`#${key[0]}`);
+        const keyElement = document.querySelector(`#${key[0]}`);
+        if (keyboard.ruKeys[i][0] === key[0] && !this.properties.capsLock) {
           keyElement.textContent = keyboard.ruKeys[i][1];
+        } else if (
+          keyboard.ruKeys[i][0] === key[0] &&
+          this.properties.capsLock
+        ) {
+          keyElement.textContent = keyboard.ruKeys[i][1].toUpperCase();
         }
       }
     });
@@ -335,7 +354,6 @@ const keyboard = {
   toggleLang() {
     if (!this.properties.langRu) {
       this.properties.langRu = true;
-
       this.createRuKeys();
     } else if (this.properties.langRu) {
       this.properties.langRu = false;
