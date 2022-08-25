@@ -202,8 +202,8 @@ const keyboard = {
 
     this.main.append(this.keysContainer);
     this.createKeys();
+    this.storageLang();
     this.triggerEvent();
-    this.isPressedKey(this.toggleLang.bind(keyboard), 'ControlLeft', 'AltLeft');
 
     return this.main;
   },
@@ -282,7 +282,7 @@ const keyboard = {
           keyElement.innerHTML = `<img src="${windows}">`;
           break;
         case key[0].match(/Digit/) ? key[0] : true:
-          keyElement.textContent = key[0].split(/Digit/).join('');
+          keyElement.textContent = key[1];
           break;
         case 'Backquote':
           keyElement.textContent = '`';
@@ -316,14 +316,8 @@ const keyboard = {
           break;
         case key[0].match(/Key/) ? key[0] : true:
           this.properties.capsLock
-            ? (keyElement.textContent = key[0]
-                .split(/Key/)
-                .join('')
-                .toUpperCase())
-            : (keyElement.textContent = key[0]
-                .split(/Key/)
-                .join('')
-                .toLowerCase());
+            ? (keyElement.textContent = key[1].toUpperCase())
+            : (keyElement.textContent = key[1].toLowerCase());
           break;
         default:
           keyElement.textContent = key[0];
@@ -336,6 +330,9 @@ const keyboard = {
   },
 
   createRuKeys() {
+    localStorage.setItem('lang', 'ru');
+    this.properties.langRu = true;
+
     keyboard.keys.forEach((key) => {
       for (let i = 0; i < keyboard.ruKeys.length; i++) {
         const keyElement = document.querySelector(`#${key[0]}`);
@@ -351,15 +348,36 @@ const keyboard = {
     });
   },
 
+  createEnKeys() {
+    localStorage.setItem('lang', 'en');
+    this.properties.langRu = false;
+
+    keyboard.ruKeys.forEach((key) => {
+      for (let i = 0; i < keyboard.keys.length; i++) {
+        const keyElement = document.querySelector(`#${key[0]}`);
+        if (keyboard.keys[i][0] === key[0] && !this.properties.capsLock) {
+          keyElement.textContent = keyboard.keys[i][1];
+        } else if (keyboard.keys[i][0] === key[0] && this.properties.capsLock) {
+          keyElement.textContent = keyboard.keys[i][1].toUpperCase();
+        }
+      }
+    });
+  },
+
   toggleLang() {
     if (!this.properties.langRu) {
-      this.properties.langRu = true;
       this.createRuKeys();
     } else if (this.properties.langRu) {
-      this.properties.langRu = false;
-      this.keysContainer.innerHTML = '';
-      this.createKeys();
+      this.createEnKeys();
     }
+  },
+
+  storageLang() {
+    window.onload = () => {
+      localStorage.getItem('lang') === 'en'
+        ? this.createEnKeys()
+        : this.createRuKeys();
+    };
   },
 
   isPressedKey(func, ...keys) {
@@ -589,6 +607,8 @@ const keyboard = {
   },
 
   triggerEvent() {
+    this.isPressedKey(this.toggleLang.bind(keyboard), 'ControlLeft', 'AltLeft');
+
     document.addEventListener('keydown', (e) => {
       this.capsLockEvent(e);
       this.shiftPressed(e);
