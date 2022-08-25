@@ -109,6 +109,7 @@ const keyboard = {
     ['Comma', 'б'],
     ['Period', 'ю'],
     ['Slash', '.'],
+    ['Space', '\u00A0'],
   ],
   shiftKeys: [
     'Backquote',

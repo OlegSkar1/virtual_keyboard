@@ -59,28 +59,33 @@ const keyEvent = (e) => {
         const upperKeys = keyboard.keys[currIndexEnKey][1].toUpperCase();
 
         if (!keyboard.properties.shift && keyboard.properties.capsLock) {
-          keyboard.properties.value += upperKeys;
-          textarea.value = keyboard.properties.value;
+          textarea.setRangeText(upperKeys, selectStart, selectEnd, 'end');
+          keyboard.properties.value = textarea.value;
         }
         if (keyboard.properties.shift && !keyboard.properties.capsLock) {
           const currKey =
             currShiftIndexEnKey !== -1
               ? keyboard.shiftKeys[currShiftIndexEnKey + 1]
               : upperKeys;
-          keyboard.properties.value += currKey;
-          textarea.value = keyboard.properties.value;
+          textarea.setRangeText(currKey, selectStart, selectEnd, 'end');
+          keyboard.properties.value = textarea.value;
         }
         if (keyboard.properties.shift && keyboard.properties.capsLock) {
           const currKey =
             currShiftIndexEnKey !== -1
               ? keyboard.shiftKeys[currShiftIndexEnKey + 1]
               : keyboard.keys[currIndexEnKey][1].toLowerCase();
-          keyboard.properties.value += currKey;
-          textarea.value = keyboard.properties.value;
+          textarea.setRangeText(currKey, selectStart, selectEnd, 'end');
+          keyboard.properties.value = textarea.value;
         }
         if (!keyboard.properties.shift && !keyboard.properties.capsLock) {
-          keyboard.properties.value += keyboard.keys[currIndexEnKey][1];
-          textarea.value = keyboard.properties.value;
+          textarea.setRangeText(
+            keyboard.keys[currIndexEnKey][1],
+            selectStart,
+            selectEnd,
+            'end'
+          );
+          keyboard.properties.value = textarea.value;
         }
       } else if (keyboard.properties.langRu) {
         const currIndexRuKey = keyboard.ruKeys.findIndex(
@@ -94,30 +99,30 @@ const keyEvent = (e) => {
             currShiftIndexRuKey !== -1
               ? keyboard.shiftRuKeys[currShiftIndexRuKey + 1]
               : keyboard.ruKeys[currIndexRuKey][1].toUpperCase();
-          keyboard.properties.value += currKey;
-          textarea.value = keyboard.properties.value;
+          textarea.setRangeText(currKey, selectStart, selectEnd, 'end');
+          keyboard.properties.value = textarea.value;
         }
         if (!keyboard.properties.shift && keyboard.properties.capsLock) {
           const currKey =
             currIndexRuKey !== -1
               ? keyboard.ruKeys[currIndexRuKey][1].toUpperCase()
               : e.key;
-          keyboard.properties.value += currKey;
-          textarea.value = keyboard.properties.value;
+          textarea.setRangeText(currKey, selectStart, selectEnd, 'end');
+          keyboard.properties.value = textarea.value;
         }
         if (keyboard.properties.shift && keyboard.properties.capsLock) {
           const currKey =
             currShiftIndexRuKey !== -1
               ? keyboard.shiftRuKeys[currShiftIndexRuKey + 1]
               : keyboard.ruKeys[currIndexRuKey][1];
-          keyboard.properties.value += currKey;
-          textarea.value = keyboard.properties.value;
+          textarea.setRangeText(currKey, selectStart, selectEnd, 'end');
+          keyboard.properties.value = textarea.value;
         }
         if (!keyboard.properties.shift && !keyboard.properties.capsLock) {
           const currKey =
             currIndexRuKey !== -1 ? keyboard.ruKeys[currIndexRuKey][1] : e.key;
-          keyboard.properties.value += currKey;
-          textarea.value = keyboard.properties.value;
+          textarea.setRangeText(currKey, selectStart, selectEnd, 'end');
+          keyboard.properties.value = textarea.value;
         }
       }
       break;
@@ -174,6 +179,8 @@ textarea.oninput = () => {
 };
 
 document.addEventListener('click', (e) => {
+  const selectStart = textarea.selectionStart;
+  const selectEnd = textarea.selectionEnd;
   keyFocus(e);
   switch (e.target) {
     case e.target.id.match(
@@ -181,24 +188,22 @@ document.addEventListener('click', (e) => {
     )
       ? e.target
       : true:
-      keyboard.properties.value += e.target.innerText;
+      textarea.setRangeText(e.target.innerText, selectStart, selectEnd, 'end');
+      keyboard.properties.value = textarea.value;
       break;
     case e.target.id === 'Delete' ? e.target : true:
-      {
-        const selectStart = textarea.selectionStart;
-        const selectEnd = textarea.selectionEnd;
-        if (selectStart === selectEnd && textarea.value !== '') {
-          textarea.setRangeText('', selectStart, selectStart + 1, 'end');
-        } else if (selectStart !== selectEnd) {
-          textarea.setRangeText(
-            '',
-            textarea.selectionStart,
-            textarea.selectionEnd,
-            'end'
-          );
-        }
-        keyboard.properties.value = textarea.value;
+      if (selectStart === selectEnd && textarea.value !== '') {
+        textarea.setRangeText('', selectStart, selectStart + 1, 'end');
+      } else if (selectStart !== selectEnd) {
+        textarea.setRangeText(
+          '',
+          textarea.selectionStart,
+          textarea.selectionEnd,
+          'end'
+        );
       }
+      keyboard.properties.value = textarea.value;
+
       break;
     case e.target.id === 'Enter' ? e.target : true:
       keyboard.properties.value += '\n';
